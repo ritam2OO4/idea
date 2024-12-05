@@ -13,12 +13,12 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "*",
+        hostname: "images.unsplash.com",
       },
     ],
   },
   experimental: {
-    ppr: "incremental",
+    // ppr: "incremental",
     after: true,
   },
   devIndicators: {
@@ -67,3 +67,4 @@ const nextConfig: NextConfig = {
 //   // https://vercel.com/docs/cron-jobs
 //   automaticVercelMonitors: true,
 // });
+module.exports = nextConfig;

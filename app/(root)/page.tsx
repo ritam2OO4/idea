@@ -1,17 +1,17 @@
 import { title } from "process";
 import SearchForm from "../../components/SearchForm";
-import StartupCard from "@/components/StartupCard";
-import img from "../../public/startup.avif";
-import { client } from "@/sanity/lib/client";
+import StartupCard, { startupTypeCard } from "@/components/StartupCard";
 import { STARTUP_QUERY } from "@/sanity/lib/queries";
+import { sanityFetch } from "@/lib/live";
 
 export default async function Home({
-searchParams}: {
-  searchParams: { query?: string };
-}) {
+  searchParams }: {
+    searchParams: { query?: string };
+  }) {
   const query = (await searchParams).query || ""; // Extract the `query` parameter safely
 
-  const posts = await client.fetch(STARTUP_QUERY)
+  // const posts = await client.fetch(STARTUP_QUERY)
+  const { data: posts } = await sanityFetch({ query: STARTUP_QUERY })
 
   return (
     <>

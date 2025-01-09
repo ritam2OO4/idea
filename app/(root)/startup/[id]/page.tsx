@@ -1,6 +1,6 @@
 // import { sanityFetch } from '@/lib/live'
 import { formatDate } from '@/lib/utils'
-import { STARTUP_QUERY_BY_ID } from '@/sanity/lib/queries'
+import { PLAYLIST_BY_SLUG_QUERY, STARTUP_QUERY_BY_ID } from '@/sanity/lib/queries'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -10,20 +10,19 @@ import markdownit from 'markdown-it'
 import { Skeleton } from '@/components/ui/Skeleton'
 import View from '@/components/view'
 import { client } from '@/sanity/lib/client'
+import StartupCard, { StartupCardSkeleton, startupTypeCard } from '@/components/StartupCard'
+import { sanityFetch } from '@/lib/live'
 
 const md = markdownit()
 
-export const experimental_ppr = true
 
 async function page({ params }: { params: { id: string } }) {
 
     const id = ((await params).id)
 
-    // const { data: post } = await sanityFetch({ query: STARTUP_QUERY_BY_ID, params: { id } })
-    const post = await client.fetch(STARTUP_QUERY_BY_ID, { id })  // fetching with client despites of sanityFetch tu cache the data for 60 sec rather than extracting it live
-
+    const [post , { select: editorPosts }] = await Promise.all([client.fetch(STARTUP_QUERY_BY_ID, { id }), client.withConfig({ useCdn: false }).fetch(PLAYLIST_BY_SLUG_QUERY, { slug: "top-picks" })]) //parallel fetching
     if (!post) return notFound()
-
+    console.log(editorPosts.length)
     const parseContent = md.render(post?.pitch || null);
     return (
         <>
@@ -61,7 +60,18 @@ async function page({ params }: { params: { id: string } }) {
                     ) : (<p className='no-result'>No Details Provided</p>)}
                 </div>
                 <hr className='divider' />
-                {/* {editor seltected startup} */}
+                {editorPosts.length > 0 && (
+                    <div className='max-w-4xl mx-auto '>
+                        <p className='text-30-semibold'>Editor Top Picks</p>
+                        <ul className='mt-7 card_grid-sm'>
+                            {editorPosts.map((post: startupTypeCard, i: number) => (
+                                <Suspense fallback={<StartupCardSkeleton />}>
+                                    <StartupCard post={post} key={i} />
+                                </Suspense>
+                            ))}
+                        </ul>
+                    </div>
+                )}
 
                 <Suspense fallback={<Skeleton className="view_skeleton" />}>
                     <View id={id} />

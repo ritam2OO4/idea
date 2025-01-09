@@ -1,12 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { auth, signOut, signIn } from "@/auth";
-// import { BadgePlus, LogOut } from "lucide-react";
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { BadgePlus, LogOut } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Navbar = async () => {
   const session = await auth();
-  // console.log(session?.); // Add optional chaining to handle null case
+  // console.log(session); // Add optional chaining to handle null case
 
   return (
     <header className="px-5 py-3 bg-white shadow-sm font-work-sans">
@@ -20,7 +20,7 @@ const Navbar = async () => {
             <>
               <Link href="/startup/create">
                 <span className="max-sm:hidden">Create</span>
-                {/* <BadgePlus className="size-6 sm:hidden" /> */}
+                <BadgePlus className="size-6 sm:hidden" />
               </Link>
 
               <form
@@ -32,11 +32,11 @@ const Navbar = async () => {
               >
                 <button type="submit">
                   <span className="max-sm:hidden">Logout</span>
-                  {/* <LogOut className="size-6 sm:hidden text-red-500" /> */}
+                  <LogOut className="size-6 sm:hidden text-red-500" />
                 </button>
               </form>
 
-              {/* <Link href={`/user/${session?.id}`}>
+              <Link href={`/user/${session?.id}`}>
                 <Avatar className="size-10">
                   <AvatarImage
                     src={session?.user?.image || ""}
@@ -44,7 +44,7 @@ const Navbar = async () => {
                   />
                   <AvatarFallback>AV</AvatarFallback>
                 </Avatar>
-              </Link> */}
+              </Link>
             </>
           ) : (
             <form

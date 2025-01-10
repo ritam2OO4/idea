@@ -11,7 +11,6 @@ import { Skeleton } from '@/components/ui/Skeleton'
 import View from '@/components/view'
 import { client } from '@/sanity/lib/client'
 import StartupCard, { StartupCardSkeleton, startupTypeCard } from '@/components/StartupCard'
-import { sanityFetch } from '@/lib/live'
 
 const md = markdownit()
 
@@ -65,7 +64,7 @@ async function page({ params }: { params: { id: string } }) {
                         <p className='text-30-semibold'>Editor Top Picks</p>
                         <ul className='mt-7 card_grid-sm'>
                             {editorPosts.map((post: startupTypeCard, i: number) => (
-                                <Suspense fallback={<StartupCardSkeleton />}>
+                                <Suspense fallback={<StartupCardSkeleton />} key={i}>
                                     <StartupCard post={post} key={i} />
                                 </Suspense>
                             ))}
